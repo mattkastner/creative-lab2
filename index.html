@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Survive the Flood!</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="scripts.js"></script>
+  </head>
+  <body>
+    <div class="jumbotron">
+      <h1 class="display-3">It's time to sink or swim!</h1>
+      <hr class="my-4">
+      <p>Noah's flood covered the tops of the <b>highest</b> mountains. Mt. Everest is roughly 9150 meters above sea level, so how much rain would it take to cover it in 40 24-hour periods? That's 457.2 meters per day, <em>(I sure hope you can swim)</em> and with 1440 minutes per day, that's .3175 meters per minute. Ouch, although, I bet Noah didn't have a measuring stick. Let's see how many days it will take for Provo to go underwater!
+      <br><br><b>Click any where to find out how long you've got</b>! <br><br>Learn about the account of the prophet Noah and the Flood from the scriptures.</p>
+      <p class="lead">
+        <a class="btn btn-primary btn-lg" href="https://www.lds.org/manual/primary-6-old-testament/lesson-8?lang=eng" role="button">Noah's Ark</a>
+      </p>
+    </div>
+
+    <div id="Gmap">
+      <script>
+        function initMap() {
+          var map = new google.maps.Map(document.getElementById('Gmap'), {
+            zoom: 10,
+            center: {lat: 40.2338, lng: -111.6585},
+            mapTypeId: 'terrain'
+          });
+          var elevator = new google.maps.ElevationService;
+          var infowindow = new google.maps.InfoWindow({map: map});
+
+          // Add a listener for the click event. Display the elevation for the LatLng of
+          // the click inside the infowindow.
+          map.addListener('click', function(event) {
+            displayLocationElevation(event.latLng, elevator, infowindow);
+          });
+        }
+
+        function displayLocationElevation(location, elevator, infowindow) {
+          // Initiate the location request
+          elevator.getElevationForLocations({
+            'locations': [location]
+          }, function(results, status) {
+            infowindow.setPosition(location);
+            if (status === 'OK') {
+              // Retrieve the first result
+              if (results[0]) {
+                // Open the infowindow indicating the elevation at the clicked position.
+                let mins = results[0].elevation/.3175;
+                let hours = mins/1440;
+                let days = hours/24;
+                if(hours >= 7){
+                  infowindow.setContent('That\'s one of the highest spots <br>you\'re gunna find! You have ' +
+                      hours.toFixed(1) + 'hours(s).');
+                } else if(hours >= 6){
+                  infowindow.setContent('Welp this spot is higher than most...<br> but these ' +
+                      hours.toFixed(1) + 'hours(s) are gunna stink.');
+                } else if(hours >= 3){
+                  infowindow.setContent('You have ' + hours.toFixed(1) + 'hour(s) to pack up!!! <br> YOU\'RE SCREWED...');
+                } else {
+                  infowindow.setContent('You have ' + hours.toFixed(1) + 'hour(s). You\'ve got time for a last neflix.');
+                }
+
+              }
+            } else {
+              infowindow.setContent('Google connot return all spots. <br>This spot does not return a height sorry T.A.');
+            }
+          });
+        }
+      </script>
+    </div>
+    <script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTQO7VglG4c26HypzSHX1vbKjCKff00M4&callback=initMap">
+</script>
+
+  <footer class="blog-footer">
+    <p>Website build located at  <a href="https://getbootstrap.com/">Github</a> by Matt Kastner</a>.</p>
+    <p>
+      <a href="#">Back to top</a>
+    </p>
+  </footer>
+  </body>
+</html>
